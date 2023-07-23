@@ -1,20 +1,19 @@
-var circles = [];
-var Number_of_circles = 0;
-var Number_of_circlesMin = 1;
-var Number_of_circlesMax = 4;
-var Number_of_circlesStep = 1;
-var walls = [15, 15, 585, 585];
-var Play = false;
-var Slow = false; // TODO: Add slow option
-var Elasticity = 90; // Elastic collision
-var grabRadius = 40;
-var grabbing = false;
-var globalGrabDir = false;
-
-var gui, gui2;
+let circles = [];
+let circlesNum = 0;
+let walls
+let play = false;
+let slow = false; // TODO: Add slow option
+let elasticity = 90; // Elastic collision
+let grabRadius = 40;
+let grabbing = false;
+let globalGrabDir = false;
+let simSpeed = 1;
+let lastTime = 0;
 
 function setup() {
-  createCanvas(1000, 600);
+  walls = [15, 15, 585, windowHeight-15];
+
+  createCanvas(walls[2]+15, windowHeight);
 
   circles.push(
     new Circle(
@@ -24,7 +23,7 @@ function setup() {
       5,
       2,
       1,
-      color(255, 0, 0)
+      color('#c73aa5')
     )
   );
 
@@ -36,7 +35,7 @@ function setup() {
       -2,
       4,
       5,
-      color(0, 0, 255)
+      color('#5c1fdd')
     )
   );
 
@@ -48,22 +47,33 @@ function setup() {
       0,
       10,
       5,
-      color(125, 125, 0)
+      color('#64bcf2')
     )
   );
-  
-  Number_of_circles = circles.length;
 
-  gui = createGui('Main Control Panel');
-  sliderRange(1, 100, 1);
-  gui.addGlobals('Play', 'Slow', 'Number_of_circles', 'Elasticity');
-  // gui2.addGlobals(); KE, CG, vel, momentum, path, values
+  frameRate(60);
+  lastTime = performance.now();
+  requestAnimationFrame(updateAnimation);
+  circlesNum = circles.length;
 }
 
-function draw() {
-  background(180);
+function draw() { }
 
-  // setTimeout(draw, 2000);
+function updateAnimation(currentTime) {
+  if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+    background('#ECECED');
+  } else {
+    background('#121212');
+  }
+
+  let deltaTime = currentTime - lastTime;
+  lastTime = currentTime;
+
+  // Call the updateAnimation function again on the next frame
+  requestAnimationFrame(updateAnimation);
+
+  let outputParagraph = document.getElementById("outputSimSpeed");
+  outputParagraph.textContent = 'Simulation Speed (' + simSpeed + ')';
 
   display();
 }
@@ -71,12 +81,12 @@ function draw() {
 function display() {
 
   userIntf();
-  
+
   for (let i = 0; i < circles.length; i++) {
     circles[i].draw();
     circles[i].displayLabels();
-    if (Play) {
-      circles[i].updatePosition(Elasticity);
+    if (play) {
+      circles[i].updatePosition(elasticity);
       for (let j = i + 1; j < circles.length; j++) {
         if (circles[i].checkCollision(circles[j])) {
           circles[i].handleCollision(circles[j]);
@@ -90,10 +100,13 @@ function display() {
 }
 
 function userIntf() {
-  gui.setPosition(walls[2] + walls[0], walls[1]+8);
-  noStroke();
-  fill(225);
-  rect(walls[0], walls[1], walls[2]-walls[0], walls[3]-walls[1]);
+  // Collision container
+  if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+    fill('#FFFFFF');
+  } else {
+    fill('#1e2329');
+  }
+  rect(walls[0], walls[1], walls[2] - walls[0], walls[3] - walls[1], 15);
 }
 
 // Mouse events
