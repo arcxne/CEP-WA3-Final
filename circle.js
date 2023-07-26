@@ -1,8 +1,8 @@
 class Circle {
-  constructor(x, y, radius, speedX, speedY, mass, colour) {
+  constructor(x, y, speedX, speedY, mass, colour) {
     this.x = x;
     this.y = y;
-    this.radius = radius;
+    this.radius = mass*6+15;
     this.speedX = speedX;
     this.speedY = speedY;
     this.mass = mass;

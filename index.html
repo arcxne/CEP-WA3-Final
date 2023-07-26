@@ -6,6 +6,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/daisyui@3.3.1/dist/full.css" rel="stylesheet" type="text/css" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * {
+      font-family: ShareTechMono-Regular, monospace;
+    }
+  </style>
   <!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
 </head>
 
@@ -31,7 +36,7 @@
       </div>
 
       <!-- Simulation play/pause panel -->
-      <div class="flex gap-2 mt-4">
+      <div class="flex gap-2 mt-5">
 
         <!-- Reset button -->
         <div class="tooltip tooltip-bottom" data-tip="Reset">
@@ -75,49 +80,16 @@
       </div>
 
       <!-- Simulation speed section -->
-      <p class="text-xl font-semibold mt-5" id="outputSimSpeed"></p>
+      <p class="text-xl mt-5" id="outputSimSpeed"></p>
 
       <input oninput="UIEvents.simulationSpeedChanged()" id="simulationSpeedSlider" type="range" min="0.25" max="3.0"
         value="1.0" step="0.25" class="range range-primary mt-4" />
     </div>
 
-    <!-- Div to contain both the help button and the canvas element for the sketch -->
+    <!-- Div to contain the canvas element for the sketch -->
     <div class="relative" style="flex: 0 0 auto;">
       <!-- Main element is where the canvas element for the sketch is located -->
       <main></main>
-      <!-- Floating help button at bottom right corner of div -->
-      <details class="dropdown dropdown-left dropdown-end absolute right-6 bottom-6 drop-shadow-2xl">
-        <summary class="btn btn-secondary">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
-          </svg>
-          Help
-        </summary>
-        <div tabindex="0" class="dropdown-content z-[1] p-4 mr-2 shadow-2xl bg-base-100 rounded-box w-max">
-          <p class="text-lg font-semibold">Welcome to Collision Simulation!</p>
-          <ul class="list-disc list-outside pl-4">
-            <li>
-              To control how the simulation behaves, use the left panel.
-            </li>
-            <li>
-              To control the bodies in the simulation, use the right panel.
-            </li>
-            <li>
-              In the right panel, click on the (+) icon to show more details
-              about a body.
-            </li>
-            <li>
-              You can click and drag on the bodies to change their position.
-            </li>
-            <li>
-              You can also click and drag on the velocity vector on a body to
-              change its velocity.
-            </li>
-          </ul>
-        </div>
-      </details>
     </div>
 
     <!-- Right control panel (previously "Data" tab) -->
@@ -132,10 +104,43 @@
         <span class="text-xl font-bold">Data Panel</span>
       </div>
       <!-- Number of bodies section -->
-      <p class="text-xl font-semibold mt-5">Number of bodies (1-5)</p>
+      <p class="text-xl mt-5">Number of bodies (1-5)</p>
       <input id="bodiesNumberInput" oninput="UIEvents.bodiesNumberEditing()"
         class="input input-bordered input-primary mt-4 mb-8 w-20" type="number" value="2" min="1" max="5" step="1" />
     </div>
+    <!-- Floating help button at bottom right corner of div -->
+    <details class="dropdown dropdown-left dropdown-end absolute right-6 bottom-6 drop-shadow-2xl">
+      <summary class="btn btn-secondary">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke-width="1.5"
+          stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+        </svg>
+        Help
+      </summary>
+      <div tabindex="0" class="dropdown-content z-[1] p-4 mr-2 shadow-2xl bg-base-100 rounded-box w-max">
+        <p class="text-lg font-bold">Welcome to Collision Simulation!</p>
+        <ul class="list-disc list-outside pl-4">
+          <li>
+            To control how the simulation behaves, use the left panel.
+          </li>
+          <li>
+            To control the bodies in the simulation, use the right panel.
+          </li>
+          <li>
+            In the right panel, click on the (+) icon to show more details
+            about a body.
+          </li>
+          <li>
+            You can click and drag on the bodies to change their position.
+          </li>
+          <li>
+            You can also click and drag on the velocity vector on a body to
+            change its velocity.
+          </li>
+        </ul>
+      </div>
+    </details>
   </div>
 
   <!-- Template element to show data readouts for each body (cloned in javascript) -->
@@ -147,12 +152,12 @@
     </div>
     <div class="collapse-content">
       <!-- Body mass readouts -->
-      <p class="text-lg font-semibold">Mass</p>
+      <p class="text-lg">Mass</p>
       <input class="input input-bordered input-primary mt-3 mb-6 mass" style="width: 5.5em"
         oninput="UIEvents.bodyDataInputEditing(this)" type="number" step="1" min="1" data-bodyindex="-1" />
 
       <!-- Body position readouts -->
-      <p class="text-lg font-semibold">Position</p>
+      <p class="text-lg">Position</p>
       <table class="table table-zebra">
         <!-- head -->
         <thead class="text-lg">
@@ -177,7 +182,7 @@
       </table>
 
       <!-- Body velocity readouts -->
-      <p class="text-lg font-semibold mt-4">Velocity</p>
+      <p class="text-lg mt-4">Velocity</p>
       <table class="table table-zebra">
         <!-- head -->
         <thead class="text-lg">

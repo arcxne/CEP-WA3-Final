@@ -19,7 +19,6 @@ function setup() {
     new Circle(
       50,
       walls[3] / 2 + 50,
-      15,
       5,
       2,
       1,
@@ -31,10 +30,9 @@ function setup() {
     new Circle(
       walls[2] - 50,
       walls[3] / 2,
-      30,
       -2,
       4,
-      5,
+      3,
       color('#5c1fdd')
     )
   );
@@ -43,7 +41,6 @@ function setup() {
     new Circle(
       walls[2] / 2,
       walls[3] / 2 - 50,
-      45,
       0,
       10,
       5,
@@ -51,13 +48,12 @@ function setup() {
     )
   );
 
-  frameRate(60);
   lastTime = performance.now();
   requestAnimationFrame(updateAnimation);
   circlesNum = circles.length;
 }
 
-function draw() { }
+function draw() { }  // Not using draw() anymore
 
 function updateAnimation(currentTime) {
   if (window.matchMedia('(prefers-color-scheme: light)').matches) {
