@@ -14,14 +14,14 @@ class Circle {
     this.lenY = 0;
   }
 
-  updatePosition(e) {
-    this.bounceOffWalls(e);
-    this.x += this.speedX * (slow ? 0.25 : 1) * (simSpeed * deltaTime * 0.1) * 0.5;
-    this.y += this.speedY * (slow ? 0.25 : 1) * (simSpeed * deltaTime * 0.1) * 0.5;
+  updatePosition() {
+    this.bounceOffWalls();
+    this.x += this.speedX * (simSpeed * deltaTime) * 0.5;
+    this.y += this.speedY * (simSpeed * deltaTime) * 0.5;
   }
 
-  bounceOffWalls(e1) {
-    let e2 = (1 + e1 / 100.0) / 2;
+  bounceOffWalls() {
+    let e2 = (1 + elasticity * 0.01) * 0.5;
     if (this.x - this.radius - 1 < walls[0]) {
       this.x = walls[0] + this.radius + 1;
       this.speedX *= -e2;
@@ -64,17 +64,15 @@ class Circle {
     this.speedY = newV1.y;
     otherCircle.speedX = newV2.x;
     otherCircle.speedY = newV2.y;
-  }
 
-  adjustPositions(otherCircle) {
     let overlap = this.radius + otherCircle.radius - dist(this.x, this.y, otherCircle.x, otherCircle.y);
     let dx = this.x - otherCircle.x;
     let dy = this.y - otherCircle.y;
     let direction = createVector(dx, dy).normalize();
-    this.x += direction.x * overlap / 2;
-    this.y += direction.y * overlap / 2;
-    otherCircle.x -= direction.x * overlap / 2;
-    otherCircle.y -= direction.y * overlap / 2;
+    this.x += direction.x * overlap * 0.5;
+    this.y += direction.y * overlap * 0.5;
+    otherCircle.x -= direction.x * overlap * 0.5;
+    otherCircle.y -= direction.y * overlap * 0.5;
   }
 
   rotateVector(vector, angle) {
@@ -84,7 +82,7 @@ class Circle {
   }
 
   calculateFinalVelocity(v1, v2, m1, m2) {
-    let e = elasticity/100.0;
+    let e = elasticity * 0.01;
     let x1 = ((m1 - m2) * v1.x + (1 + e) * m2 * v2.x) / (m1 + m2);
     let y1 = v1.y;
     return createVector(x1, y1);
@@ -93,7 +91,7 @@ class Circle {
   grabChange() {
     if (grabbing) {
       let dDir = dist(this.lenX, this.lenY, mouseX, mouseY);
-      if (dDir < grabRadius/2) {
+      if (dDir < grabRadius * 0.5) {
         this.grabDir = true;
         globalGrabDir = true;
       }
