@@ -9,13 +9,19 @@ let globalGrabDir = false;
 let simSpeed = 1;
 let lastTime = 0;
 let deltaTime = 0;
-let frameCount = 0;
+
+let font;
+
+function preload() {
+  // import sharetechmono font
+  font = loadFont('assets/ShareTechMono-Regular.ttf');
+}
 
 function setup() {
   walls = [15, 15, 585, windowHeight-15];
 
   createCanvas(walls[2]+15, windowHeight);
-
+ 
   circles.push(
     new Circle(
       50,
@@ -53,12 +59,17 @@ function setup() {
   requestAnimationFrame(updateAnimation);
   circlesNum = circles.length;
 
+  textFont(font);
+
   // frameRate(10);
 }
 
 function draw() { }  // ! Not using draw()
 
 function updateAnimation(currentTime) {
+  createCanvas(walls[2]+15, windowHeight);
+  walls[3] = windowHeight-15;
+
   if (window.matchMedia('(prefers-color-scheme: light)').matches) {
     background('#ECECED');
   } else {
@@ -76,9 +87,6 @@ function updateAnimation(currentTime) {
 
   let outputElasticityParagraph = document.getElementById("outputElasticity");
   outputElasticityParagraph.textContent = 'Elasticity Value (' + elasticity + '%)';
-
-  frameCount++;
-  console.log('helo');
 
   display();
 }

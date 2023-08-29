@@ -1,10 +1,10 @@
 class Circle {
-  constructor(x, y, speedX, speedY, mass, colour) {
+  constructor(x, y, velx, vely, mass, colour) {
     this.x = x;
     this.y = y;
     this.radius = mass*6+15;
-    this.speedX = speedX;
-    this.speedY = speedY;
+    this.velx = velx;
+    this.vely = vely;
     this.mass = mass;
     this.colour = colour;
     this.grabObj = false;
@@ -16,28 +16,28 @@ class Circle {
 
   updatePosition() {
     this.bounceOffWalls();
-    this.x += this.speedX * (simSpeed * deltaTime) * 0.5;
-    this.y += this.speedY * (simSpeed * deltaTime) * 0.5;
+    this.x += this.velx * (simSpeed * deltaTime) * 0.5;
+    this.y += this.vely * (simSpeed * deltaTime) * 0.5;
   }
 
   bounceOffWalls() {
     let e2 = (1 + elasticity * 0.01) * 0.5;
     if (this.x - this.radius - 1 < walls[0]) {
       this.x = walls[0] + this.radius + 1;
-      this.speedX *= -e2;
+      this.velx *= -e2;
     }
     if (this.x + this.radius + 1 > walls[2]) {
       this.x = walls[2] - this.radius - 1;
-      this.speedX *= -e2;
+      this.velx *= -e2;
     }
 
     if (this.y - this.radius - 1 < walls[1]) {
       this.y = walls[1] + this.radius + 1;
-      this.speedY *= -e2;
+      this.vely *= -e2;
     }
     if (this.y + this.radius + 1 > walls[3]) {
       this.y = walls[3] - this.radius - 1;
-      this.speedY *= -e2;
+      this.vely *= -e2;
     }
   }
 
@@ -52,18 +52,18 @@ class Circle {
 
   handleCollision(otherCircle) {
     let angle = atan2(otherCircle.y - this.y, otherCircle.x - this.x);
-    let v1 = createVector(this.speedX, this.speedY);
-    let v2 = createVector(otherCircle.speedX, otherCircle.speedY);
+    let v1 = createVector(this.velx, this.vely);
+    let v2 = createVector(otherCircle.velx, otherCircle.vely);
     let rotatedV1 = this.rotateVector(v1, -angle);
     let rotatedV2 = this.rotateVector(v2, -angle);
     let finalV1 = this.calculateFinalVelocity(rotatedV1, rotatedV2, this.mass, otherCircle.mass);
     let finalV2 = this.calculateFinalVelocity(rotatedV2, rotatedV1, otherCircle.mass, this.mass);
     let newV1 = this.rotateVector(finalV1, angle);
     let newV2 = this.rotateVector(finalV2, angle);
-    this.speedX = newV1.x;
-    this.speedY = newV1.y;
-    otherCircle.speedX = newV2.x;
-    otherCircle.speedY = newV2.y;
+    this.velx = newV1.x;
+    this.vely = newV1.y;
+    otherCircle.velx = newV2.x;
+    otherCircle.vely = newV2.y;
 
     let overlap = this.radius + otherCircle.radius - dist(this.x, this.y, otherCircle.x, otherCircle.y);
     let dx = this.x - otherCircle.x;
@@ -98,8 +98,8 @@ class Circle {
       if (this.grabDir) {
         this.lenX = mouseX;
         this.lenY = mouseY;
-        this.speedX = (this.lenX - this.x) / 15;
-        this.speedY = (this.lenY - this.y) / 15;
+        this.velx = (this.lenX - this.x) / 15;
+        this.vely = (this.lenY - this.y) / 15;
       }
 
       let dObj = dist(this.x, this.y, mouseX, mouseY);
@@ -117,12 +117,12 @@ class Circle {
   }
 
   displayLabels() {
-    this.lenX = this.x + this.speedX * 15;
-    this.lenY = this.y + this.speedY * 15;
+    this.lenX = this.x + this.velx * 15;
+    this.lenY = this.y + this.vely * 15;
 
     textAlign(CENTER);
     fill(0);
-    text(round(sqrt(this.speedX**2+this.speedY**2), 2), this.x, this.y + this.radius + 15);
+    text(round(sqrt(this.velx**2+this.vely**2), 2), this.x, this.y + this.radius + 15);
 
     fill(255, 0, 0, 50);
     ellipse(this.lenX, this.lenY, grabRadius);
