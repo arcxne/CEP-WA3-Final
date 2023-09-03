@@ -80,11 +80,9 @@ function setup() {
   circlesNum = circles.length;
 
   textFont(font);
-
-  // frameRate(10);
 }
 
-function draw() { }  // ! Not using draw()
+function draw() { }  // * Not using draw()
 
 function updateAnimation(currentTime) {
   createCanvas(walls[2]+15, windowHeight);
@@ -113,17 +111,15 @@ function updateAnimation(currentTime) {
 
 function display() {
 
-  // console.log(inputs);
-
-
   userIntf();
 
   updateParticles(); // Update particles
   displayParticles(); // Display particles
+  UIEvents.updateDataPage(); // Update circles
 
   for (let i = 0; i < circles.length; i++) {
     circles[i].draw();
-    circles[i].displayLabels(i);
+    circles[i].displayLabels();
     // UIEvents.updateCircleData(i, inputs[i]);
     if (play) {
       for (let j = i + 1; j < circles.length; j++) {

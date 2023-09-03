@@ -18,8 +18,8 @@ class Circle {
 
   updatePosition() {
     this.bounceOffWalls();
-    this.x += this.velx * (simSpeed * deltaTime) * 0.5;
-    this.y += this.vely * (simSpeed * deltaTime) * 0.5;
+    this.x += this.velx * (simSpeed * deltaTime) * 0.25;
+    this.y += this.vely * (simSpeed * deltaTime) * 0.25;
   }
 
   bounceOffWalls() {
@@ -136,16 +136,17 @@ class Circle {
     this.lenX = this.x + this.velx * 15;
     this.lenY = this.y + this.vely * 15;
 
-    textAlign(CENTER);
-    fill(0);
-    text(round(sqrt(this.velx ** 2 + this.vely ** 2), 2), this.x, this.y + this.radius + 15);
-
     fill(255, 0, 0, 50);
     ellipse(this.lenX, this.lenY, grabRadius);
 
     strokeWeight(3);
     stroke(0);
     line(this.x, this.y, this.lenX, this.lenY);
+    
+    // * text on simulation tends to be distracting
+    // textAlign(CENTER);
+    // fill(0);
+    // text(round(sqrt(this.velx ** 2 + this.vely ** 2), 2), this.x, this.y + this.radius + 15);
   }
 
   draw() {

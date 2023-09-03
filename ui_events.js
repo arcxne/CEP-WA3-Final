@@ -9,10 +9,12 @@ class UIEvents {
     this.circlesNumInput = document.getElementById("circlesNumInput");
     // this.dataPanelContainer = document.getElementById("dataPanelContainer"); // New container element
     this.bodyDataLayoutTemplate = document.getElementById("bodyDataLayout");
-  }
 
-  static resetBtnClicked() {
+    // Number of bodies input box
+    this.bodiesNumberInput = document.getElementById("circlesNumInput");
 
+    // Data page
+    this.dataPage = document.getElementById("dataPage");
   }
 
   static playPauseBtnClicked() {
@@ -51,7 +53,6 @@ class UIEvents {
     let newCirclesNum = parseFloat(element.value);
     newCirclesNum = newCirclesNum < 1 ? 1 : newCirclesNum;
     newCirclesNum = newCirclesNum > 5 ? 5 : newCirclesNum;
-    console.log(newCirclesNum);
 
     if (newCirclesNum < circlesNum) {
       this.removeCircle(newCirclesNum);
@@ -95,7 +96,7 @@ class UIEvents {
     const dataPanels = document.querySelectorAll(".bodyDataLayout");
 
     // Remove data panels beyond the specified number
-    for (let i = num; i < dataPanels.length+1; i++) {
+    for (let i = num; i < dataPanels.length + 1; i++) {
       dataContainer.removeChild(dataPanels[i]);
     }
 
@@ -118,12 +119,12 @@ class UIEvents {
     const circleIndex = circles.indexOf(circle);
     dataPanel.querySelector(".collapse-title-label").textContent = `Body ${circleIndex + 1} Data`;
     dataPanel.querySelector(".mass").value = circle.mass;
-    dataPanel.querySelector(".px").value = circle.x;
-    dataPanel.querySelector(".py").value = circle.y;
-    dataPanel.querySelector(".vx").value = circle.velx;
-    dataPanel.querySelector(".vy").value = circle.vely;
-    dataPanel.querySelector(".ke").textContent = circle.ke.toFixed(2);
-    dataPanel.querySelector(".momentum").textContent = circle.momentum.toFixed(2);
+    dataPanel.querySelector(".px").value = circle.x.toFixed(0);
+    dataPanel.querySelector(".py").value = circle.y.toFixed(0);
+    dataPanel.querySelector(".vx").value = circle.velx.toFixed(2);
+    dataPanel.querySelector(".vy").value = circle.vely.toFixed(2);
+    dataPanel.querySelector(".ke").value = circle.ke.toFixed(2);
+    dataPanel.querySelector(".momentum").value = circle.momentum.toFixed(2);
     dataPanel.querySelector(".body-circle").style.backgroundColor = circle.colour;
 
     // Append the data panel to the right-side data panel container
@@ -138,10 +139,8 @@ class UIEvents {
     // Add an event listener to update circle data when user edits input fields
     dataPanel.querySelectorAll("input").forEach((input) => {
       input.addEventListener("input", () => {
-        // inputs.push(input);
         if (input.value == '') return;
         UIEvents.updateCircleData(circleIndex, input);
-        // console.log(inputs);
       });
     });
   }
@@ -163,4 +162,57 @@ class UIEvents {
       circle.vely = parseFloat(inputElement.value);
     }
   }
+
+  static updateDataPage() {
+    //Update the "number of bodies" input box, if the user is not editing it
+    if (document.activeElement != this.bodiesNumberInput) {
+      this.bodiesNumberInput.value = circles.length;
+    }
+    // else {
+    //   return;
+    // }
+
+    //Update the bodydatacontrols with the mass, position, velocity of their corresponding bodies
+    let bodyDataControls = this.dataPage.querySelectorAll(".bodyDataControl");
+    for (let i = 0; i < circles.length; i++) {
+      let bodyDataControl = bodyDataControls[i];
+      let body = circles[i];
+
+      //Get relevant controls to update
+      let massInput = bodyDataControl.querySelector(".mass");
+      let posXInput = bodyDataControl.querySelector(".px");
+      let posYInput = bodyDataControl.querySelector(".py");
+      let velocityXInput = bodyDataControl.querySelector(".vx");
+      let velocityYInput = bodyDataControl.querySelector(".vy");
+      let keLabel = bodyDataControl.querySelector(".ke");
+      let momentumLabel = bodyDataControl.querySelector(".momentum");
+
+      //Update control values if the user is not editing them (aka they do not have focus)
+      //This is quite the chain of if statements, but I have no idea how else to do this
+      if (document.activeElement != massInput) {
+        massInput.value = body.mass.toFixed(0);
+      }
+
+      if (document.activeElement != posXInput) {
+        posXInput.value = body.x.toFixed(0);
+      }
+
+      if (document.activeElement != posYInput) {
+        posYInput.value = body.y.toFixed(0);
+      }
+
+      if (document.activeElement != velocityXInput) {
+        velocityXInput.value = body.velx.toFixed(2);
+      }
+
+      if (document.activeElement != velocityYInput) {
+        velocityYInput.value = body.vely.toFixed(2);
+      }
+
+      bodyDataControl.querySelector(".body-circle").style.backgroundColor = body.colour;
+      keLabel.value = body.ke.toFixed(2);
+      momentumLabel.value = body.momentum.toFixed(2);
+    }
+  }
+
 }
