@@ -1,13 +1,21 @@
+// Description: This file contains all the event handlers for the UI elements
+
 class UIEvents {
   static documentLoaded() {
+    // Simulation speed slider
     this.simulationSpeedSlider = document.getElementById(
       "simulationSpeedSlider"
     );
+
+    // Elasticity value slider
     this.elasticityValueSlider = document.getElementById(
       "elasticityValueSlider"
     );
+
+    // Circle number input box
     this.circlesNumInput = document.getElementById("circlesNumInput");
-    // this.dataPanelContainer = document.getElementById("dataPanelContainer"); // New container element
+
+    // Body data layout template
     this.bodyDataLayoutTemplate = document.getElementById("bodyDataLayout");
 
     // Number of bodies input box
@@ -17,11 +25,16 @@ class UIEvents {
     this.dataPage = document.getElementById("dataPage");
   }
 
+  // Event handler for when the user clicks the play/pause button
   static playPauseBtnClicked() {
+    // Toggle play/pause
     play = !play;
+
+    // Define play/pause icons
     const playIcon = document.getElementById("playIcon");
     const pauseIcon = document.getElementById("pauseIcon");
 
+    // Update play/pause button icon
     if (play) {
       playIcon.classList.add("hidden");
       pauseIcon.classList.remove("hidden");
@@ -31,29 +44,36 @@ class UIEvents {
     }
   }
 
+  // Event handler for when the user clicks the forward one frame button
   static forwardOneFrameBtnClicked() {
+    // Play one frame for certain amount of time
     play = !play;
     setTimeout(() => {
       play = !play;
     }, 1000 / 60);
   }
 
+  // Event handler for when the user changes the simulation speed slider
   static simulationSpeedChanged() {
     simSpeed = parseFloat(this.simulationSpeedSlider.value);
   }
 
+  // Event handler for when the user changes the elasticity value slider
   static elasticityValueChanged() {
     elasticity = parseInt(this.elasticityValueSlider.value);
   }
 
+  // Event handler for when the user changes the number of bodies
   static numCirclesChanged() {
     let element = this.circlesNumInput;
-    if (element == null || element == '') return;
+    if (element == null || element == '') return; // If the element is null or empty, return
 
+    // Get the new number of circles
     let newCirclesNum = parseFloat(element.value);
     newCirclesNum = newCirclesNum < 1 ? 1 : newCirclesNum;
     newCirclesNum = newCirclesNum > 5 ? 5 : newCirclesNum;
 
+    // Update the number of circles
     if (newCirclesNum < circlesNum) {
       this.removeCircle(newCirclesNum);
     } else if (newCirclesNum > circlesNum) {
@@ -61,8 +81,10 @@ class UIEvents {
     }
   }
 
+  // Event handler for when the user clicks the add circle button
   static addCircle(num) {
     for (let i = circlesNum; i < num; i++) {
+      // Create a new circle
       let colour = color(random(0, 255), random(0, 255), random(0, 255));
       circles.push(
         new Circle(
@@ -75,12 +97,15 @@ class UIEvents {
         )
       );
 
+      // Update the data panel for the new circle
       this.updateDataPanel(circles[i]);
     }
 
+    // Update the number of circles
     circlesNum = num;
   }
 
+  // Event handler for when the user clicks the remove circle button
   static removeCircle(num) {
     if (num >= circlesNum) {
       return; // Nothing to remove if the number is not valid just in case
@@ -100,6 +125,7 @@ class UIEvents {
       dataContainer.removeChild(dataPanels[i]);
     }
 
+    // Update the number of circles
     circlesNum = num;
 
     // Update data panels' labels
@@ -110,6 +136,7 @@ class UIEvents {
   }
 
 
+  // Event handler for adding data to the data page
   static updateDataPanel(circle) {
     // Create a new data panel element for the circle
     const dataPanel = this.bodyDataLayoutTemplate.cloneNode(true);
@@ -145,11 +172,13 @@ class UIEvents {
     });
   }
 
+  // Event handler for updating circle data
   static updateCircleData(circleIndex, inputElement) {
     // Update the corresponding circle's data based on the input element
     const circle = circles[circleIndex];
     const className = inputElement.className;
 
+    // Update the circle's data based on the input element
     if (className.includes("mass")) {
       circle.mass = parseFloat(inputElement.value);
     } else if (className.includes("px")) {
@@ -163,14 +192,12 @@ class UIEvents {
     }
   }
 
+  // Event handler for updating the data page in realtime
   static updateDataPage() {
     //Update the "number of bodies" input box, if the user is not editing it
     if (document.activeElement != this.bodiesNumberInput) {
       this.bodiesNumberInput.value = circles.length;
     }
-    // else {
-    //   return;
-    // }
 
     //Update the bodydatacontrols with the mass, position, velocity of their corresponding bodies
     let bodyDataControls = this.dataPage.querySelectorAll(".bodyDataControl");
@@ -188,31 +215,14 @@ class UIEvents {
       let momentumLabel = bodyDataControl.querySelector(".momentum");
 
       //Update control values if the user is not editing them (aka they do not have focus)
-      //This is quite the chain of if statements, but I have no idea how else to do this
-      if (document.activeElement != massInput) {
-        massInput.value = body.mass.toFixed(0);
-      }
-
-      if (document.activeElement != posXInput) {
-        posXInput.value = body.x.toFixed(0);
-      }
-
-      if (document.activeElement != posYInput) {
-        posYInput.value = body.y.toFixed(0);
-      }
-
-      if (document.activeElement != velocityXInput) {
-        velocityXInput.value = body.velx.toFixed(2);
-      }
-
-      if (document.activeElement != velocityYInput) {
-        velocityYInput.value = body.vely.toFixed(2);
-      }
-
+      massInput.value = document.activeElement != massInput ? body.mass.toFixed(0) : massInput.value;
+      posXInput.value = document.activeElement != posXInput ? body.x.toFixed(0) : posXInput.value;
+      posYInput.value = document.activeElement != posYInput ? body.y.toFixed(0) : posYInput.value;
+      velocityXInput.value = document.activeElement != velocityXInput ? body.velx.toFixed(2) : velocityXInput.value;
+      velocityYInput.value = document.activeElement != velocityYInput ? body.vely.toFixed(2) : velocityYInput.value;
       bodyDataControl.querySelector(".body-circle").style.backgroundColor = body.colour;
       keLabel.value = body.ke.toFixed(2);
       momentumLabel.value = body.momentum.toFixed(2);
     }
   }
-
 }

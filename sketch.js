@@ -1,3 +1,7 @@
+// Description: Main file for the collision simulation
+
+// * Global variables
+
 let circles = [];
 let circlesNum = 0;
 let inputs = [];
@@ -10,11 +14,12 @@ let globalGrabDir = false;
 let simSpeed = 1;
 let lastTime = 0;
 let deltaTime = 0;
-
 let font;
-
 let particles = [];
 
+// * Functions
+
+// Particle system
 function updateParticles() {
   for (let i = particles.length - 1; i >= 0; i--) {
     particles[i].update();
@@ -37,10 +42,11 @@ function preload() {
 }
 
 function setup() {
+  // Set up the canvas
   walls = [15, 15, 585, windowHeight-15];
-
   createCanvas(walls[2]+15, windowHeight);
  
+  // Create the circles
   circles.push(
     new Circle(
       50,
@@ -50,7 +56,6 @@ function setup() {
       1
     )
   );
-
   circles.push(
     new Circle(
       walls[2] - 50,
@@ -60,7 +65,6 @@ function setup() {
       3
     )
   );
-
   circles.push(
     new Circle(
       walls[2] * 0.5,
@@ -71,56 +75,65 @@ function setup() {
     )
   );
 
+  // Create the data panels
   circles.forEach((circle) => {
     UIEvents.updateDataPanel(circle);
   });
 
+  // Set up the animation
   lastTime = performance.now();
   requestAnimationFrame(updateAnimation);
   circlesNum = circles.length;
-
-  textFont(font);
 }
 
-function draw() { }  // * Not using draw()
+function draw() { }  // Not using draw()
 
+// Animation loop
 function updateAnimation(currentTime) {
+  // Set up the canvas
   createCanvas(walls[2]+15, windowHeight);
   walls[3] = windowHeight-15;
 
+  // Match background to system theme
   if (window.matchMedia('(prefers-color-scheme: light)').matches) {
     background('#ECECED');
   } else {
     background('#121212');
   }
 
+  // Update the simulation speed
   deltaTime = (currentTime - lastTime) / 10;
   lastTime = currentTime;
 
   // Call the updateAnimation function again on the next frame
   requestAnimationFrame(updateAnimation);
 
+  // Get the simulation speed
   let outputSimSpeedParagraph = document.getElementById("outputSimSpeed");
   outputSimSpeedParagraph.textContent = 'Simulation Speed (x' + simSpeed + ')';
 
+  // Get the elasticity value
   let outputElasticityParagraph = document.getElementById("outputElasticity");
   outputElasticityParagraph.textContent = 'Elasticity Value (' + elasticity + '%)';
 
   display();
 }
 
+// Display
 function display() {
 
+  // User interface
   userIntf();
 
   updateParticles(); // Update particles
   displayParticles(); // Display particles
   UIEvents.updateDataPage(); // Update circles
 
+  // Update the circles
   for (let i = 0; i < circles.length; i++) {
     circles[i].draw();
     circles[i].displayLabels();
-    // UIEvents.updateCircleData(i, inputs[i]);
+    // Check for collisions only if the simulation is playing
     if (play) {
       for (let j = i + 1; j < circles.length; j++) {
         if (circles[i].checkCollision(circles[j])) {
@@ -129,11 +142,13 @@ function display() {
       }
       circles[i].updatePosition();
     } else {
+      // If the simulation is paused, check if the user is grabbing a circle
       circles[i].grabChange();
     }
   }
 }
 
+// User interface
 function userIntf() {
   // Collision container
   if (window.matchMedia('(prefers-color-scheme: light)').matches) {
