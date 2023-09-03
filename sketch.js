@@ -1,5 +1,6 @@
 let circles = [];
 let circlesNum = 0;
+let inputs = [];
 let walls;
 let play = false;
 let elasticity = 90; // Elastic collision
@@ -55,6 +56,10 @@ function setup() {
     )
   );
 
+  circles.forEach((circle) => {
+    UIEvents.updateDataPanel(circle);
+  });
+
   lastTime = performance.now();
   requestAnimationFrame(updateAnimation);
   circlesNum = circles.length;
@@ -93,11 +98,15 @@ function updateAnimation(currentTime) {
 
 function display() {
 
+  // console.log(inputs);
+
+
   userIntf();
 
   for (let i = 0; i < circles.length; i++) {
     circles[i].draw();
-    circles[i].displayLabels();
+    circles[i].displayLabels(i);
+    // UIEvents.updateCircleData(i, inputs[i]);
     if (play) {
       for (let j = i + 1; j < circles.length; j++) {
         if (circles[i].checkCollision(circles[j])) {
