@@ -13,6 +13,24 @@ let deltaTime = 0;
 
 let font;
 
+let particles = [];
+
+function updateParticles() {
+  for (let i = particles.length - 1; i >= 0; i--) {
+    particles[i].update();
+    if (!particles[i].isAlive()) {
+      particles.splice(i, 1); // Remove dead particles
+    }
+  }
+}
+
+function displayParticles() {
+  for (let particle of particles) {
+    particle.display();
+  }
+}
+
+
 function preload() {
   // import sharetechmono font
   font = loadFont('assets/ShareTechMono-Regular.ttf');
@@ -29,8 +47,7 @@ function setup() {
       walls[3] * 0.5 + 50,
       5,
       2,
-      1,
-      color('#c73aa5')
+      1
     )
   );
 
@@ -40,8 +57,7 @@ function setup() {
       walls[3] * 0.5,
       -2,
       4,
-      3,
-      color('#5c1fdd')
+      3
     )
   );
 
@@ -51,8 +67,7 @@ function setup() {
       walls[3] * 0.5 - 50,
       0,
       10,
-      5,
-      color('#64bcf2')
+      5
     )
   );
 
@@ -102,6 +117,9 @@ function display() {
 
 
   userIntf();
+
+  updateParticles(); // Update particles
+  displayParticles(); // Display particles
 
   for (let i = 0; i < circles.length; i++) {
     circles[i].draw();

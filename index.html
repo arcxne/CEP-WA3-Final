@@ -160,7 +160,7 @@
       <!-- Body mass readouts -->
       <p class="text-lg">Mass</p>
       <input class="input input-bordered input-primary mt-3 mb-6 mass" style="width: 5.5em"
-        oninput="UIEvents.bodyDataInputEditing(this)" type="number" step="1" min="1" data-bodyindex="-1" />
+         type="number" step="1" min="1" max="10" data-bodyindex="-1" />
 
       <!-- Body position readouts -->
       <p class="text-lg">Position</p>
@@ -177,11 +177,11 @@
           <tr>
             <td>
               <input class="input input-bordered input-primary px" style="width: 5.5em"
-                oninput="UIEvents.bodyDataInputEditing(this)" type="number" step="1" data-bodyindex="-1" />
+                 type="number" step="0.5" data-bodyindex="-1" />
             </td>
             <td>
               <input class="input input-bordered input-primary py" style="width: 5.5em"
-                oninput="UIEvents.bodyDataInputEditing(this)" type="number" step="1" data-bodyindex="-1" />
+                 type="number" step="0.5" data-bodyindex="-1" />
             </td>
           </tr>
         </tbody>
@@ -202,20 +202,30 @@
           <tr>
             <td>
               <input class="input input-bordered input-primary vx" style="width: 5.5em"
-                oninput="UIEvents.bodyDataInputEditing(this)" type="number" step="0.5" data-bodyindex="-1" />
+                 type="number" step="0.5" max="50" data-bodyindex="-1" />
             </td>
             <td>
               <input class="input input-bordered input-primary vy" style="width: 5.5em"
-                oninput="UIEvents.bodyDataInputEditing(this)" type="number" step="0.5" data-bodyindex="-1" />
+                 type="number" step="0.5" max="50" data-bodyindex="-1" />
             </td>
           </tr>
         </tbody>
       </table>
+
+      <!-- Body KE and overall momentum readouts -->
+      <p class="text-lg mt-4">Kinetic Energy</p>
+      <input class="input input-bordered input-primary mt-3 mb-6 ke" style="width: 5.5em" type="number" step="0.5"
+        data-bodyindex="-1" readonly />
+
+      <p class="text-lg mt-4">Momentum</p>
+      <input class="input input-bordered input-primary mt-3 mb-6 momentum" style="width: 5.5em" type="number" step="0.5"
+        data-bodyindex="-1" readonly />
     </div>
   </div>
 
   <script src="sketch.js"></script>
   <script src="circle.js"></script>
+  <script src="particle.js"></script>
   <script src="ui_events.js"></script>
   </div>
 </body>

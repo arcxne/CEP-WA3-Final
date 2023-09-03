@@ -122,6 +122,8 @@ class UIEvents {
     dataPanel.querySelector(".py").value = circle.y;
     dataPanel.querySelector(".vx").value = circle.velx;
     dataPanel.querySelector(".vy").value = circle.vely;
+    dataPanel.querySelector(".ke").textContent = circle.ke.toFixed(2);
+    dataPanel.querySelector(".momentum").textContent = circle.momentum.toFixed(2);
     dataPanel.querySelector(".body-circle").style.backgroundColor = circle.colour;
 
     // Append the data panel to the right-side data panel container
@@ -137,6 +139,7 @@ class UIEvents {
     dataPanel.querySelectorAll("input").forEach((input) => {
       input.addEventListener("input", () => {
         // inputs.push(input);
+        if (input.value == '') return;
         UIEvents.updateCircleData(circleIndex, input);
         // console.log(inputs);
       });

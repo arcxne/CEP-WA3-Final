@@ -1,12 +1,14 @@
 class Circle {
-  constructor(x, y, velx, vely, mass, colour) {
+  constructor(x, y, velx, vely, mass) {
     this.x = x;
     this.y = y;
-    this.radius = mass*6+15;
+    this.radius = this.calcSize(mass);
     this.velx = velx;
     this.vely = vely;
+    this.ke = 0.5 * mass * (velx ** 2 + vely ** 2);
+    this.momentum = mass * sqrt(velx ** 2 + vely ** 2);
     this.mass = mass;
-    this.colour = colour;
+    this.colour = color(255 - mass * 20, 255 - mass * 20, mass * 20);
     this.grabObj = false;
     this.grabDir = false;
 
@@ -41,6 +43,10 @@ class Circle {
     }
   }
 
+  calcSize(mass) {
+    return mass * 6 + 15;
+  }
+
   checkCollision(otherCircle) {
     let distance = dist(this.x, this.y, otherCircle.x, otherCircle.y);
     if (distance < this.radius + otherCircle.radius) {
@@ -73,6 +79,16 @@ class Circle {
     this.y += direction.y * overlap * 0.5;
     otherCircle.x -= direction.x * overlap * 0.5;
     otherCircle.y -= direction.y * overlap * 0.5;
+
+    let collisionX = (this.x + otherCircle.x) / 2;
+    let collisionY = (this.y + otherCircle.y) / 2;
+
+    for (let i = 0; i < 10; i++) {
+      let angle = random(TWO_PI);
+      let speed = random(1, 5);
+      let particle = new Particle(collisionX, collisionY, cos(angle) * speed, sin(angle) * speed);
+      particles.push(particle);
+    }
   }
 
   rotateVector(vector, angle) {
@@ -122,17 +138,22 @@ class Circle {
 
     textAlign(CENTER);
     fill(0);
-    text(round(sqrt(this.velx**2+this.vely**2), 2), this.x, this.y + this.radius + 15);
+    text(round(sqrt(this.velx ** 2 + this.vely ** 2), 2), this.x, this.y + this.radius + 15);
 
     fill(255, 0, 0, 50);
     ellipse(this.lenX, this.lenY, grabRadius);
-    
+
     strokeWeight(3);
     stroke(0);
     line(this.x, this.y, this.lenX, this.lenY);
   }
 
   draw() {
+    this.ke = 0.5 * this.mass * (this.velx ** 2 + this.vely ** 2);
+    this.momentum = this.mass * sqrt(this.velx ** 2 + this.vely ** 2);
+    this.radius = this.calcSize(this.mass);
+    this.colour = color(255 - this.mass * 20, 255 - this.mass * 20, this.mass * 20);
+
     fill(this.colour);
     noStroke();
     ellipse(this.x, this.y, this.radius * 2);
