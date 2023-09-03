@@ -116,26 +116,9 @@ class UIEvents {
 
     let controls = this.dataPage.querySelectorAll(".bodyDataControl");
     this.dataPage.removeChild(controls[controls.length - 1]);
-
-  //   // Remove corresponding data panels from the right-side data panel container
-  //   const dataContainer = document.getElementById("dataPage");
-
-  //   // Select all data panels with class 'bodyDataLayout' (your cloned template)
-  //   const dataPanels = document.querySelectorAll(".bodyDataLayout");
-
-  //   // Remove data panels beyond the specified number
-  //   for (let i = num; i < dataPanels.length + 1; i++) {
-  //     dataContainer.removeChild(dataPanels[i]);
-  //   }
-
+    
     // Update the number of circles
     circlesNum = num;
-
-  //   // Update data panels' labels
-  //   const updatedDataPanels = document.querySelectorAll(".bodyDataLayout");
-  //   updatedDataPanels.forEach((dataPanel, index) => {
-  //     dataPanel.querySelector(".collapse-title-label").textContent = `Body ${index + 1} Data`;
-  //   });
   }
 
 
