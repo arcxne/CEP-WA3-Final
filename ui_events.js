@@ -167,8 +167,8 @@ class UIEvents {
     // Update the circle's data based on the input element
     if (className.includes("mass")) {
       let x = parseFloat(inputElement.value);
-      x = x < 1 ? 1 : x;
-      x = x > 10 ? 10 : x;
+      x = x < 1 ? 1 : x; // Limit the mass to 1
+      x = x > 10 ? 10 : x; // Limit the mass to 10
       circle.mass = x;
     } else if (className.includes("px")) {
       circle.x = parseFloat(inputElement.value);
