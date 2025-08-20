@@ -71,7 +71,7 @@ class UIEvents {
     // Get the new number of circles
     let newCirclesNum = parseFloat(element.value);
     newCirclesNum = newCirclesNum < 1 ? 1 : newCirclesNum;
-    newCirclesNum = newCirclesNum > 5 ? 5 : newCirclesNum;
+    newCirclesNum = newCirclesNum > 20 ? 20 : newCirclesNum;  //////////// CHANGE MADE /////////////
 
     // Update the number of circles
     if (newCirclesNum < circlesNum) {
